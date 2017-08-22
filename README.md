@@ -1,9 +1,9 @@
-#使用版本
+# 使用版本
 
 - react:16.0.0-alpha.12
 - react-native: 0.47.1
 
-#套件
+# 套件
 
 - firebase
 - react-native-calendars
