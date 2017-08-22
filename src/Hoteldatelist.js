@@ -32,7 +32,7 @@ export default class Hoteldatelist extends Component {
               <View style={styles.ItemRowView}>
                 <MaterialCommunityIcons
                   name={item.state == "yes" ? RoomStatesPlatform : "check"}
-                  color={item.state == "yes" ? RoomStatesPlatformColor : "#00bb00"}
+                  color={item.state == "yes" ? "#222" : "#00bb00"}
                   size={35}
                 />
                 <Text style={styles.ContentText}>

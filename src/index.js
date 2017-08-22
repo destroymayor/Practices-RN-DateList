@@ -54,13 +54,12 @@ export default class index extends Component {
             marked: true
           };
         }
+      });
 
-        this.setState({
-          AllData: ItemsDate,
-          RoomDateState: markedDate,
-          selected: val.val().state,
-          visible: false
-        });
+      this.setState({
+        AllData: ItemsDate,
+        RoomDateState: markedDate,
+        visible: false
       });
     });
   }
