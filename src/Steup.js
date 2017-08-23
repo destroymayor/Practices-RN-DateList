@@ -7,10 +7,16 @@ import { StackNavigator, NavigationActions, getStateForAction } from "react-navi
 
 const Steup = StackNavigator(
   {
-    Index: { screen: Index, navigationOptions: { headerTitle: "訂房日曆" } },
+    Index: { screen: Index, navigationOptions: { headerTitle: "訂房行事曆" } },
     Hoteldatelist: { screen: Hoteldatelist, navigationOptions: { headerTitle: "訂房資訊" } }
   },
-  { geeturesEnabled: false }
+  {
+    navigationOptions: {
+      headerBackTitle: " ",
+      headerTintColor: "#2897ff",
+      gesturesEnabled: false
+    }
+  }
 );
 
 const navigateOnce = getStateForAction => (action, state) => {
