@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Platform, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Platform, Text, View } from "react-native";
 
 import FireBaseApp from "./utils/FirebaseAPI";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -30,39 +30,42 @@ export default class index extends Component {
     this.ref = null;
   }
 
-  componentWillMount() {
-    this._FetchFireBase();
-  }
-
-  _FetchFireBase() {
+  componentDidMount() {
     this.ref = FireBaseApp.database().ref("hoteldatelist/");
-
-    this.ref.on("value", snapshot => {
-      const ItemsDate = [];
-      let markedDate = {};
-      snapshot.forEach(val => {
-        ItemsDate.push({
-          date: val.val().date,
-          state: val.val().state,
-          platform: val.val().platform,
-          _key: val.key
-        });
-
-        if (val.val().state == "yes") {
-          markedDate[val.val().date] = {
-            selected: true,
-            marked: true
-          };
-        }
-      });
-
-      this.setState({
-        AllData: ItemsDate,
-        RoomDateState: markedDate,
-        visible: false
-      });
-    });
+    this.ref.on("value", this._FetchFireBase);
   }
+
+  componentWillUnmount() {
+    if (this.ref) {
+      this.ref.off("value", this._FetchFireBase);
+    }
+  }
+
+  _FetchFireBase = snapshot => {
+    const ItemsDate = [];
+    const markedDate = {};
+    snapshot.forEach(val => {
+      ItemsDate.push({
+        date: val.val().date,
+        state: val.val().state,
+        platform: val.val().platform,
+        _key: val.key
+      });
+
+      if (val.val().state == "yes") {
+        markedDate[val.val().date] = {
+          selected: true,
+          marked: true
+        };
+      }
+    });
+
+    this.setState({
+      AllData: ItemsDate,
+      RoomDateState: markedDate,
+      visible: false
+    });
+  };
 
   _onDayPress = day => {
     this.props.navigation.navigate("Hoteldatelist", {
@@ -89,7 +92,7 @@ export default class index extends Component {
       renderArrow={direction =>
         <MaterialIcons
           size={40}
-          color="#2897ff"
+          color="#222222"
           name={direction == "left" ? "keyboard-arrow-left" : "keyboard-arrow-right"}
         />}
       markedDates={this.state.RoomDateState}
@@ -98,60 +101,51 @@ export default class index extends Component {
 
   render() {
     return (
-      <ScrollView scrollEnabled={false} style={styles.container}>
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
         {this.state.visible
-          ? <View style={styles.LoadingView}>
-              <ActivityIndicator size="large" color="#2894ff" animating={this.state.visible} />
-              <Text style={styles.LoadingText}>載入資料中</Text>
-            </View>
-          : this._renderCalendar()}
-      </ScrollView>
+          ? <ActivityIndicator
+              style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+              size="large"
+              color="#2894ff"
+              animating={this.state.visible}
+            />
+          : <ScrollView scrollEnabled={false} style={{ flex: 1 }}>
+              {this._renderCalendar()}
+            </ScrollView>}
+      </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  LoadingView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  LoadingText: {
-    marginTop: 10,
-    fontSize: 18,
-    color: "#2894ff"
-  }
-});
-
 const calendarStyles = StyleSheet.create({
   header: {
-    paddingVertical: 20
+    paddingVertical: 15
   },
   week: {
     marginTop: 0,
-    paddingBottom: 10
+    marginBottom: 10
   },
   monthText: {
-    fontSize: 30,
+    fontSize: 25,
     lineHeight: 30,
     margin: 0,
     letterSpacing: 1.45
   },
   dayHeader: {
-    color: "#222",
+    color: "#222222",
     fontSize: 16,
     paddingVertical: 20
   },
   day: {
     justifyContent: "center",
     paddingVertical: 25,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 15
   },
   dayText: {
-    fontSize: 22
+    fontSize: 22,
+    paddingTop: 10
   },
   todayText: {
     fontSize: 22

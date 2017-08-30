@@ -67,17 +67,9 @@ export default class Hoteldatelist extends Component {
                                 platform: platforms,
                                 state: item.state == "yes" ? "no" : "yes"
                               });
-
                               this.props.navigation.goBack(null);
                             } else {
-                              Alert.alert("無法退訂", "您必須以 " + item.platform + " 平台來退訂", [
-                                {
-                                  text: "確定",
-                                  onPress: () => {
-                                    console.log("確定");
-                                  }
-                                }
-                              ]);
+                              Alert.alert("您必須以 " + item.platform + " 平台來退訂", "", [{ text: "確定" }]);
                             }
                           } else {
                             addroom.update({
